@@ -6,23 +6,21 @@ const pug = require('pug')
 const keywords = ['extends', 'include']
 
 module.exports = {
+	meta: {
+		ext: 'pug',
+		outExt: 'html'
+	},
   parse: (file, meta) => {
-    return new Promise((resolve, reject) => {
-      const deps = []
-      const rl = readline.createInterface({
-        input: fs.createReadStream(file, 'utf8')
-      })
+		const deps = []
+		fs.readFileSync(file).toString().split('\n').forEach(line => {
+			if (line.indexOf(keywords[0]) > -1 || line.indexOf(keywords[1]) > -1) {
+				let words = line.split(' ')
+				let file = words[words.length - 1]
+				deps.push(path.parse(file).name)
+			}
+		})
 
-      rl.on('line', line => {
-        if (line.indexOf(keywords[0]) > -1 || line.indexOf(keywords[1]) > -1) {
-          let words = line.split(' ')
-          let file = words[words.length - 1]
-          deps.push(path.parse(file).name)
-        }
-      })
-        .on('error', err => reject(err))
-        .on('close', () => resolve(deps))
-    })
+		return deps
   },
   compile: {
     string: (str, opts) => {
@@ -31,12 +29,8 @@ module.exports = {
       })
     },
     file: (path, opts) => {
-      return new Promise((resolve, reject) => {
-        fs.readFile(path, 'utf8', (err, data) => {
-          if (err) reject(err)
-          resolve(pug.render(data, opts))
-        })
-      })
+			let html = pug.renderFile(path, opts)
+			return html
     }
   }
 }
