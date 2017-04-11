@@ -23,9 +23,8 @@ module.exports = {
   },
   compile: {
     string: (str, opts) => {
-      return new Promise((resolve, reject) => {
-        resolve(pug.render(str, opts))
-      })
+      let html = pug.render(str, opts)
+      return html
     },
     file: (path, opts) => {
       let html = pug.renderFile(path, opts)
