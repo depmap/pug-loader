@@ -1,6 +1,6 @@
 {
   "name": "@depmap/pug-loader",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.0",
   "description": "Pug loader for Depmap",
   "main": "index.js",
   "scripts": {
